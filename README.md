@@ -1,4 +1,4 @@
-# diffindiffdev: Robust Non-parametric Difference-in-differences estimation
+# diffindiff: Robust Non-parametric Difference-in-differences estimation
 
 This package implements methods for non-parametric difference-in-differences estimation, as proposed by Hirshberg and Wager (2017). We consider a
 setup where we observe data `(X, Y, S, T)` generated according
