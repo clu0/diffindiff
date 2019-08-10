@@ -24,6 +24,7 @@ library(diffindiff)
 library(glmnet)
 library(rlearner)
 library(EQL)
+library(magrittr)
 
 n = 100; p=12
 X = matrix(rnorm(n * p), n, p)
@@ -35,7 +36,7 @@ T.treat.prob = 0.4
 Si = rbinom(n, 1, S.treat.prob)
 Ti = rbinom(n, 1, T.treat.prob)
 b = pmax(X[,1] + X[,2], 0)
-Y = b + Ti*f + Si*h + T*S*tau + rnorm(n)
+Y = b + Ti*f + Si*h + Ti*Si*tau + rnorm(n)
 
 # generate a basis
 make_matrix = function(x) stats::model.matrix(~.-1, x)
@@ -47,16 +48,16 @@ Basis = generate.basis(X,order)
 # for the setup above, then we can run the transformed regression
 TR_fit = DiD(X = Basis,
   Y = Y,
-  T = T,
-  S = S,
+  Ti = Ti,
+  Si = Si,
   constant_eff = "constant")
   
 # If we do not assume tau is constant, we can run DiD-AMLE
-gamma.minimax = minimax(Basis, T, S)
+gamma.minimax = minimax(Basis, Ti, Si)
 DiD_AMLE_fit = DiD(X = Basis,
   Y = Y,
-  T = T,
-  S = S,
+  Ti = Ti,
+  Si = Si,
   constant_eff = "non_constant",
   gamma = gamma.minimax)
 
